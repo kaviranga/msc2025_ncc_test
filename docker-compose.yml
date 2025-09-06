@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  frontend2:
+    build: ./frontend2
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend2
+    networks:
+      - app-network
+
+  backend2:
+    build: ./backend2
+    ports:
+      - "3001:3001"
+    environment:
+      - DB_URL=mongodb://mongo:27017/sjpdb
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo:4.0-xenial
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: always
+    networks:
+      - app-network
+
+volumes:
+  mongo-data:
+
+networks:
+  app-network:
